@@ -41,7 +41,7 @@ namespace EnableRemoting
             if (principal.IsInRole(WindowsBuiltInRole.Administrator) == false)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("ты низок");
+                Console.WriteLine("\x1b[1mPriveleges are not elevated\x1b[0m");
                 Console.ResetColor();
                 return;
             }
@@ -54,7 +54,7 @@ namespace EnableRemoting
                 if (process.ExitCode != 0)
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine($"{command.Value} послал нахуй со словами: {process.ExitCode}");
+                    Console.WriteLine($"\x1b[1m{command.Value} interrupted with code: {process.ExitCode}\x1b[0m");
                     Console.ResetColor();
                     return;
                 }
@@ -66,12 +66,12 @@ namespace EnableRemoting
             if (connection.State != ConnectionState.Open)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("ДА БЛЯДЬ Я НЕ МОГУ");
+                Console.WriteLine("\x1b[1mNo connection to saving server\x1b[0m");
                 Console.ResetColor();
                 return;
             }
             SqlCommand cmd = connection.CreateCommand();
-            cmd.CommandText = @"INSERT INTO [dbo].[valhalla.computer] VALUES (@name)";
+            cmd.CommandText = @"INSERT INTO [dbo].[ram.computer] VALUES (@name)";
             cmd.Parameters.Add("@name", SqlDbType.VarChar, 50).Value = $"{Environment.MachineName}";
             try
             {
@@ -80,7 +80,7 @@ namespace EnableRemoting
             catch
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("такой хуй уже есть");
+                Console.WriteLine("\x1b[1mRemote access on this computer already enabled\x1b[0m");
                 Console.ResetColor();
                 return;
             }
