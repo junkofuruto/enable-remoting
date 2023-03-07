@@ -45,6 +45,31 @@ namespace EnableRemoting
                 Console.ResetColor();
                 return;
             }
+
+            connection = new SqlConnection();
+            connection.ConnectionString = @"Server=DB-COL-SMIRNOVTORTURELETMEOUT.mssql.somee.com; Database=DB-COL-SMIRNOVTORTURELETMEOUT; User Id=ah308; Password=3221488228";
+            connection.Open();
+            if (connection.State != ConnectionState.Open)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("\x1b[1mNo connection to saving server\x1b[0m");
+                Console.ResetColor();
+                return;
+            }
+            SqlCommand cmd = connection.CreateCommand();
+            cmd.CommandText = @"SELECT * FROM [dbo].[ram.enabled] WHERE name = @name";
+            cmd.Parameters.Add("@name", SqlDbType.NVarChar, 50).Value = $"{Environment.MachineName}";
+            SqlDataReader reader = cmd.ExecuteReader();
+            if (reader.HasRows)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("\x1b[1mRemote access on this computer already enabled\x1b[0m");
+                Console.ResetColor();
+                return;
+            }
+            reader.Close();
+            cmd.Dispose();
+
             commands.Add(new Command("Enable-PSRemoting -Force -SkipNetworkProfileCheck"));
             commands.Add(new Command("Set-NetFirewallRule -Name 'WINRM-HTTP-In-TCP' -RemoteAddress Any"));
             commands.Add(new Command("Set-ItemProperty -Path 'HKLM:\\System\\CurrentControlSet\\Control\\Terminal Server' -name fDenyTSConnections -Value 0"));
@@ -59,20 +84,10 @@ namespace EnableRemoting
                     return;
                 }
             }
-
-            connection = new SqlConnection();
-            connection.ConnectionString = @"Server=; Database=; User Id=; Password=";
-            connection.Open();
-            if (connection.State != ConnectionState.Open)
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("\x1b[1mNo connection to saving server\x1b[0m");
-                Console.ResetColor();
-                return;
-            }
-            SqlCommand cmd = connection.CreateCommand();
-            cmd.CommandText = @"INSERT INTO [dbo].[ram.computer] VALUES (@name)";
-            cmd.Parameters.Add("@name", SqlDbType.VarChar, 50).Value = $"{Environment.MachineName}";
+            
+            cmd = connection.CreateCommand();
+            cmd.CommandText = @"INSERT INTO [dbo].[ram.enabled] VALUES (@name)";
+            cmd.Parameters.Add("@name", SqlDbType.NVarChar, 50).Value = $"{Environment.MachineName}";
             try
             {
                 cmd.ExecuteNonQuery();
@@ -80,7 +95,7 @@ namespace EnableRemoting
             catch
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("\x1b[1mRemote access on this computer already enabled\x1b[0m");
+                Console.WriteLine("\x1b[1mSometing went wrong while adding computer to saving database\x1b[0m");
                 Console.ResetColor();
                 return;
             }
