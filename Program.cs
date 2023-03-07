@@ -47,7 +47,7 @@ namespace EnableRemoting
             }
 
             connection = new SqlConnection();
-            connection.ConnectionString = @"Server=DB-COL-SMIRNOVTORTURELETMEOUT.mssql.somee.com; Database=DB-COL-SMIRNOVTORTURELETMEOUT; User Id=ah308; Password=3221488228";
+            connection.ConnectionString = @"";
             connection.Open();
             if (connection.State != ConnectionState.Open)
             {
