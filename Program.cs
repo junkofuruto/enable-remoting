@@ -41,7 +41,7 @@ namespace EnableRemoting
             if (principal.IsInRole(WindowsBuiltInRole.Administrator) == false)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("\x1b[1mPriveleges are not elevated\x1b[0m");
+                Console.WriteLine("Priveleges are not elevated");
                 Console.ResetColor();
                 return;
             }
@@ -52,7 +52,7 @@ namespace EnableRemoting
             if (connection.State != ConnectionState.Open)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("\x1b[1mNo connection to saving server\x1b[0m");
+                Console.WriteLine("No connection to saving server");
                 Console.ResetColor();
                 return;
             }
@@ -63,7 +63,7 @@ namespace EnableRemoting
             if (reader.HasRows)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("\x1b[1mRemote access on this computer already enabled\x1b[0m");
+                Console.WriteLine("Remote access on this computer already enabled");
                 Console.ResetColor();
                 return;
             }
@@ -79,7 +79,7 @@ namespace EnableRemoting
                 if (process.ExitCode != 0)
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine($"\x1b[1m{command.Value} interrupted with code: {process.ExitCode}\x1b[0m");
+                    Console.WriteLine($"{command.Value} interrupted with code: {process.ExitCode}");
                     Console.ResetColor();
                     return;
                 }
@@ -95,7 +95,7 @@ namespace EnableRemoting
             catch
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("\x1b[1mSometing went wrong while adding computer to saving database\x1b[0m");
+                Console.WriteLine("Someting went wrong while adding computer to saving database");
                 Console.ResetColor();
                 return;
             }
